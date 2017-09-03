@@ -16,4 +16,9 @@ router.get('/redirect',
     // Successful authentication, redirect home.
     res.redirect('/');
   });
+
+router.get('/logout', (req,res,next) => {
+  req.logout();
+  res.redirect('/');
+})
 module.exports = router;
