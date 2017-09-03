@@ -12,6 +12,8 @@ let session = require('express-session');
 var index = require('./routes/index');
 var auth = require('./routes/auth');
 
+const models = require('./models');
+
 var app = express();
 
 // view engine setup
@@ -32,8 +34,32 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:3000/auth/redirect"
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log(`In GoogleStrategy second arg:`);
-    console.log(accessToken, refreshToken, profile);
+    // check if we have any record of this user before by looking
+    // for their Google ID in our users table
+    models.user.findAll({
+      where: {
+        google_id: profile.id
+      }
+    })
+    .then( (users) => {
+      console.log(`Looked up Google ID and found:`);
+      console.log(users);
+      // if no results, we need to add an entry to our users table
+      if( users.length === 0 ) {
+        models.user.create({
+          display_name: profile.displayName,
+          google_profile_image_link: profile['_json'].image.url,
+          username: null,
+          password: null,
+          google_id: profile.id
+        })
+        .then( () => {
+          console.log('Created new user in users table!');
+        })
+      } else {
+        console.log('We have seen this person before.');
+      }
+    })
 
     // here is where I would extract my app-specific info about this user
     // and then pass it on in cb as an object.
@@ -56,9 +82,6 @@ passport.use(new GoogleStrategy({
 // this authenticated user. It receives the user object from Google Strategy
 
 passport.serializeUser(function(user, done) {
-  console.log('in serializeUser, receives user from Google Strategy done');
-  console.log(`user:`);
-  console.dir(user);
 
   // the call to done below tells my app that I want to store the object
   // {profile. user.profile} in session.
@@ -70,9 +93,6 @@ passport.serializeUser(function(user, done) {
 // by the user. id is going to be assigned the object we gave as the second
 // argument to done at the end of serializeUser.
 passport.deserializeUser(function(id, done) {
-  console.log('in deserializeUser');
-  console.log(`id:`);
-  console.dir(id);
   let err = null;
 
   // I could also use the id passed to do some sort of local database lookup
