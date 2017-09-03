@@ -1,7 +1,12 @@
 <body>
   <div>
     <a href="">Gabble</a> |
-    <a href="">Create</a> |
-    <a href="">Logged In As</a> |
-    <a href="">Log out</a>
+    <% if( locals.username ) { %>
+      <a href="">Create</a> |
+      <a href="">Logged In As <%= username %></a> |
+      <a href="">Log out</a>
+    <% } else { %>
+      <a href="/auth/google">Login with Google</a>
+    <% } %>
+
   </div>
