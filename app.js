@@ -53,28 +53,24 @@ passport.use(new GoogleStrategy({
           password: null,
           google_id: profile.id
         })
-        .then( () => {
+        .then( (user) => {
           console.log('Created new user in users table!');
+          return cb(null, {profile: profile['_json'], user_id: user.dataValues.id });
         })
       } else {
         console.log('We have seen this person before.');
+        return cb(null, {profile: profile['_json'], user_id: users[0].dataValues.id })
       }
     })
 
-    // here is where I would extract my app-specific info about this user
-    // and then pass it on in cb as an object.
-    // in this case, I'm passing all the info I get from profile on to serializeUser.
+    // There are two things I'm going to pass on to serializeUser
+    // 1. the entire Google Profile object
+    // 2. the user id in my users table for this user
 
-    // this is my opportunity to take any information from the profile
-    // that I get from Google and pass it along to serializeUser where
-    // that information will be stored in session. If I don't do anything
-    // with the Google profile here, I won't get it back unless the user has
-    // to re-authenticate with Google.
+    // I need item #2 because when a user creates a new message, this is
+    // the number that I will need for the messages table entry.
 
-    // I can also store the accessToken or refreshToken somewhere if I need them
-    // to make later requests against the Google API.
 
-    return cb(null, {profile: profile['_json']})
   }
 ));
 
@@ -83,10 +79,7 @@ passport.use(new GoogleStrategy({
 
 passport.serializeUser(function(user, done) {
 
-  // the call to done below tells my app that I want to store the object
-  // {profile. user.profile} in session.
-
-  done(null, {profile: user.profile});
+  done(null, {profile: user.profile, user_id: user.user_id});
 });
 
 // id gets passed whatever Express found in the session for the cookie sent
@@ -101,7 +94,7 @@ passport.deserializeUser(function(id, done) {
   // now this second argument is what gets placed in req.user by passport.
   // I could place everything in req.user, but here I'm only putting the
   // displayName and the link to a Google profile image for the user.
-  done(err, {displayName: id.profile.displayName, profileImage: id.profile.image.url});
+  done(err, {profile: id.profile, user_id: id.user_id});
 });
 
 app.use(session({ secret: 'key', // used to sign the session ID cookie

@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   console.log(req.user);
   if( req.user ) {
-    res.render('index', { title: 'Express', username: req.user.displayName });
+    res.render('index', { title: 'Express', username: req.user.profile.displayName });
   } else {
     res.render('index', { title: 'Express' });
   }
