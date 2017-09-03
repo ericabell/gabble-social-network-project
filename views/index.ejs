@@ -1,5 +1,13 @@
 <% include ./partials/head %>
 <% include ./partials/header %>
 
+<% if( locals.messages ) { %>
+  <ul>
+  <% messages.forEach( (message) => { %>
+    <li> <%= message.dataValues.body %> </li>
+  <% }) %>
+  </ul>
+<% } %>
+
 <% include ./partials/footer %>
 <% include ./partials/foot %>
