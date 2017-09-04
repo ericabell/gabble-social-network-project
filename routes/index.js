@@ -30,14 +30,18 @@ router.get('/create', function(req, res, next) {
 
 router.post('/create', function(req, res, next) {
   console.dir(req.body);
-  models.message.create({
+
+  let newGab = models.message.build({
     body: req.body.gab,
-    user_id: req.user.user_id
-  })
-  .then( (doc) => {
-    console.log(`Gab created!`);
-    res.redirect('/');
-  })
-})
+    authorId: req.user.user_id
+  });
+  newGab.save()
+    .then( (savedGab) => {
+      res.redirect('/');
+    })
+    .catch( (err) => {
+      res.status(500).send(err);
+    });
+});
 
 module.exports = router;
