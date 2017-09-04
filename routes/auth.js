@@ -20,5 +20,23 @@ router.get('/redirect',
 router.get('/logout', (req,res,next) => {
   req.logout();
   res.redirect('/');
+});
+
+
+router.get('/local', (req, res, next) => {
+  res.send('login');
+});
+
+router.post('/local', (req, res, next) => {
+
 })
+
+router.get('/register', (req, res, next) => {
+  res.send('register');
+});
+
+router.post('/register', (req, res, next) => {
+  
+})
+
 module.exports = router;
