@@ -4,7 +4,11 @@
 <% if( locals.messages ) { %>
   <ul>
   <% messages.forEach( (message) => { %>
-    <li> <%= message.dataValues.body %> </li>
+    <ul>
+      <li> <%= message.dataValues.body %> </li>
+      <li> <%= message.dataValues.createdAt %> </li>
+      <li> <%= message.dataValues.author.display_name %> </li>
+    </ul>
   <% }) %>
   </ul>
 <% } %>
