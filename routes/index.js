@@ -43,6 +43,22 @@ router.get('/', function(req, res, next) {
     })
 });
 
+// handle when the user clicks the like button next to a gab
+router.post('/like/:id', function(req, res, next) {
+  let newLike = models.like.build({
+    messageId: req.params.id,
+    userId: req.user.user_id
+  });
+
+  newLike.save()
+    .then( function(savedLike) {
+      res.redirect('/');
+    })
+    .catch( function(err) {
+      res.status(500).send(err);
+    })
+})
+
 router.get('/create', function(req, res, next) {
   res.render('create', { title: 'Express', username: req.user.profile.displayName });
 });
