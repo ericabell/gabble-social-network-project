@@ -79,4 +79,28 @@ router.post('/create', function(req, res, next) {
     });
 });
 
+router.post('/delete/:id', function(req, res, next) {
+  // get rid of a gab, get all the likes first
+  models.like
+    .destroy({
+      where: {
+        messageId: req.params.id
+      }
+    })
+    .then( () => {
+      models.message
+        .destroy({
+          where: {
+            id: req.params.id
+          }
+        })
+    })
+    .then( () => {
+      res.redirect('/');
+    })
+    .catch( (err) => {
+      res.status(500).send(err);
+    })
+})
+
 module.exports = router;
