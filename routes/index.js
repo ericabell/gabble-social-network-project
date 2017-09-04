@@ -10,7 +10,23 @@ router.get('/', function(req, res, next) {
 
   // Find all gabs in the messages table and display them appropriately
   // if the user is logged in or logged out
-  models.message.findAll()
+  models.message.findAll({
+    order: [[ "createdAt", "DESC"]],
+    include: [
+      {
+        model: models.user,
+        as: "author"
+      },
+      {
+        model: models.like,
+        as: "likes",
+        include: {
+          model: models.user,
+          as: "user"
+        }
+      }
+    ]
+  })
     .then( (messages) => {
       console.log(messages);
       if( req.user ) {
@@ -21,6 +37,9 @@ router.get('/', function(req, res, next) {
       } else {
         res.render('index', { title: 'Express' });
       }
+    })
+    .catch( (err) => {
+      res.status(500).send(err);
     })
 });
 
