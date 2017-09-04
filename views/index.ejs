@@ -3,25 +3,27 @@
 
 <% if( locals.messages ) { %>
   <ul>
-  <% messages.forEach( (message) => { %>
-    <ul>
-      <li> <%= message.dataValues.body %> </li>
-      <li> <%= message.dataValues.createdAt %> </li>
-      <li> <%= message.dataValues.author.display_name %> </li>
-      <li> <img src="<%= message.dataValues.author.google_profile_image_link %>"> </li>
-      <li> Likes: <%= message.dataValues.likes.length %> </li>
-      <li> <form action="/like/<%= message.dataValues.id %>" method="post">
-            <input type="submit" value="Like">
-           </form>
-      </li>
 
-      <li> <form action="/delete/<%= message.dataValues.id %>" method="post">
-            <input type="submit" value="Delete">
-           </form>
-      </li>
+    <% messages.forEach( (message) => { %>
+      <ul>
+        <div class='gab'>
+          <li> <%= message.dataValues.body %> </li>
+          <li> <%= message.dataValues.createdAt %> </li>
+          <li> <%= message.dataValues.author.display_name %> </li>
+          <li> <img src="<%= message.dataValues.author.google_profile_image_link %>"> </li>
+          <li> Likes: <%= message.dataValues.likes.length %> </li>
+          <li> <form action="/like/<%= message.dataValues.id %>" method="post">
+                <input type="submit" value="Like">
+               </form>
+          </li>
 
-    </ul>
-  <% }) %>
+          <li> <form action="/delete/<%= message.dataValues.id %>" method="post">
+                <input type="submit" value="Delete">
+               </form>
+          </li>
+        </div>
+      </ul>
+    <% }) %>
   </ul>
 <% } %>
 
