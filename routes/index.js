@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
     ]
   })
     .then( (messages) => {
-      console.log(messages);
+      console.dir(messages);
       if( req.user ) {
         res.render('index', { title: 'Express',
                               username: req.user.profile.displayName,

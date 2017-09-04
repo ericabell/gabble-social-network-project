@@ -9,6 +9,12 @@
       <li> <%= message.dataValues.createdAt %> </li>
       <li> <%= message.dataValues.author.display_name %> </li>
       <li> <img src="<%= message.dataValues.author.google_profile_image_link %>"> </li>
+      <li> Likes: <%= message.dataValues.likes.length %> </li>
+      <li> <form action="/like/<%= message.dataValues.id %>" method="post">
+            <input type="submit" value="Like">
+           </form>
+      </li>
+
     </ul>
   <% }) %>
   </ul>
