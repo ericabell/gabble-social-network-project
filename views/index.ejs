@@ -8,6 +8,7 @@
       <li> <%= message.dataValues.body %> </li>
       <li> <%= message.dataValues.createdAt %> </li>
       <li> <%= message.dataValues.author.display_name %> </li>
+      <li> <img src="<%= message.dataValues.author.google_profile_image_link %>"> </li>
     </ul>
   <% }) %>
   </ul>
